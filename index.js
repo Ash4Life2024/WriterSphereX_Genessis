@@ -1,20 +1,10 @@
-eexport default function WriterSphereX() {
+// pages/index.js (for Next.js)
+export default function Home() {
   return (
-    <div className="bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white font-sans min-h-screen flex flex-col items-center justify-center px-4 text-center">
-      <head>
-        <title>WriterSphereX</title>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link
-          href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-          rel="stylesheet"
-        />
-      </head>
-
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white font-sans flex flex-col items-center justify-center px-4 text-center">
       <h1 className="text-5xl font-bold mb-6">🚀 WriterSphereX</h1>
       <p className="text-xl max-w-2xl mb-8">
-        The AI-powered creation suite for authors, screenwriters, game devs, and storytellers.
-        Generate, animate, publish, and share across every medium.
+        The AI-powered creation suite for authors, screenwriters, and game developers.
       </p>
       <a
         href="#"
@@ -22,7 +12,10 @@ eexport default function WriterSphereX() {
       >
         Launch App
       </a>
-      <div className="mt-10 text-sm opacity-60">© 2025 WriterSphereX. All Rights Reserved.</div>
+      <div className="mt-10 text-sm opacity-60">
+        © 2025 WriterSphereX. All Rights Reserved.
+      </div>
     </div>
   );
 }
+
