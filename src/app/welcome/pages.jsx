@@ -1,3 +1,5 @@
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 export default function WelcomePage() {
   return (
     <main className="flex flex-col items-center justify-center h-screen text-white">
