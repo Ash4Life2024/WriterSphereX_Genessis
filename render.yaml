@@ -1,0 +1,2 @@
+env:
+  UCP_DB_API_KEY: ${{ secrets.UCP_DB_API_KEY }}
