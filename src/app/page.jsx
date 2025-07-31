@@ -1,6 +1,6 @@
 "use client";
 
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import BadgeIcon from "@/components/BadgeIcon";
@@ -29,15 +29,15 @@ export default function Page() {
 
     if (user) {
       try {
-        await setDoc(doc(db, "users", user.uid), {
+        const userRef = doc(db, "users", user.uid);
+        await updateDoc(userRef, {
           genre,
-          firstLogin: true,
-          badgeUnlocked: genreToKey[genre],
+          badgeUnlocked: arrayUnion(genreToKey[genre]),
           timestamp: Date.now(),
         });
-        console.log("Genre and badge saved:", genre);
+        console.log("Badge added:", genreToKey[genre]);
       } catch (error) {
-        console.error("Error saving genre:", error);
+        console.error("Error updating badge:", error);
       }
     }
   };
