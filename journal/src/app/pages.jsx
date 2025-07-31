@@ -7,9 +7,9 @@ export default function JournalPage() {
   const [genre, setGenre] = useState("Fantasy");
   const [entry, setEntry] = useState("");
   const [prompt, setPrompt] = useState("");
+  const [caelResponse, setCaelResponse] = useState("");
 
   useEffect(() => {
-    // Genre-based prompts
     const genrePrompts = {
       Fantasy: "Describe a memory that feels magical but might not be real.",
       Drama: "Write about a moment of emotional transformation.",
@@ -18,7 +18,7 @@ export default function JournalPage() {
     const newPrompt = genrePrompts[genre];
     setPrompt(newPrompt);
 
-    // Voice narration using SpeechSynthesis API
+    // 🎧 Cael narrates the prompt aloud
     const speakPrompt = () => {
       const utterance = new SpeechSynthesisUtterance(newPrompt);
       utterance.rate = 0.95;
@@ -31,7 +31,7 @@ export default function JournalPage() {
       );
       if (caelVoice) utterance.voice = caelVoice;
 
-      speechSynthesis.cancel(); // Stop any previous speech
+      speechSynthesis.cancel();
       speechSynthesis.speak(utterance);
     };
 
@@ -40,19 +40,55 @@ export default function JournalPage() {
     }
   }, [genre]);
 
+  const detectEmotions = (text) => {
+    const emotionKeywords = {
+      hope: "lightOrbits",
+      loss: "shadowNebula",
+      power: "solarBurst",
+      love: "twinStar",
+      fear: "blackHole",
+    };
+    return Object.keys(emotionKeywords).filter((keyword) =>
+      text.toLowerCase().includes(keyword)
+    );
+  };
+
+  const getCaelResponse = (emotions) => {
+    if (emotions.includes("hope")) return "I sense light stirring in your story.";
+    if (emotions.includes("loss")) return "You've touched the silent stars tonight.";
+    if (emotions.includes("power")) return "Your mind pulses like a solar burst.";
+    if (emotions.includes("love")) return "You orbit the warmth of twin stars.";
+    if (emotions.includes("fear")) return "Even black holes whisper truths.";
+    return "Your words drift gently through the galaxy.";
+  };
+
   const handleSaveEntry = async () => {
     const auth = getAuth();
     const user = auth.currentUser;
     const db = getFirestore();
 
     if (user && entry.trim() !== "") {
+      const emotionsDetected = detectEmotions(entry);
+      const caelReply = getCaelResponse(emotionsDetected);
+      setCaelResponse(caelReply);
+
       try {
         await setDoc(doc(db, "journalEntries", `${user.uid}_${Date.now()}`), {
           genre,
           entry,
+          emotions: emotionsDetected,
+          caelResponse: caelReply,
           timestamp: Date.now(),
         });
         setEntry("");
+
+        // 🧑‍🎤 Cael speaks emotional feedback
+        const feedbackUtterance = new SpeechSynthesisUtterance(caelReply);
+        feedbackUtterance.rate = 1;
+        feedbackUtterance.pitch = 1.1;
+        feedbackUtterance.volume = 0.95;
+        speechSynthesis.speak(feedbackUtterance);
+
         alert("Journal saved to your galaxy ✨");
       } catch (error) {
         console.error("Error saving journal:", error);
@@ -87,8 +123,14 @@ export default function JournalPage() {
         </button>
       </div>
 
-      <div className="text-xs text-gray-400 opacity-50">
-        Cael whispers through the stars: your thoughts matter 🌌
+      {caelResponse && (
+        <div className="mt-2 text-sm text-indigo-300 font-light italic text-center max-w-lg">
+          Cael whispers: {caelResponse}
+        </div>
+      )}
+
+      <div className="text-xs text-gray-400 opacity-50 mt-4">
+        Your words ripple through the orbit of your inner universe.
       </div>
     </main>
   );
