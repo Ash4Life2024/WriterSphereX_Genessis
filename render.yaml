@@ -1,2 +1,24 @@
-env:
-  UCP_DB_API_KEY: ${{ secrets.UCP_DB_API_KEY }}
+services:
+  - type: web
+    name: writerspherex-web
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    repo: https://github.com/Ash4Life2024/WriterSphereX_Genessis
+    branch: main
+    envVars:
+      - key: UCP_DB_API_KEY
+        value: YOUR_UCP_KEY_HERE
+      - key: FIREBASE_API_KEY
+        value: YOUR_FIREBASE_KEY_HERE
+      - key: OPENAI_API_KEY
+        value: YOUR_OPENAI_KEY_HERE
+      - key: STRIPE_SECRET_KEY
+        value: YOUR_STRIPE_KEY_HERE
+      - key: GOOGLE_OAUTH_CLIENT_ID
+        value: YOUR_GOOGLE_CLIENT_ID_HERE
+      - key: GOOGLE_OAUTH_CLIENT_SECRET
+        value: YOUR_GOOGLE_CLIENT_SECRET_HERE
+
+
+
