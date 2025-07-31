@@ -19,6 +19,9 @@ services:
         value: YOUR_GOOGLE_CLIENT_ID_HERE
       - key: GOOGLE_OAUTH_CLIENT_SECRET
         value: YOUR_GOOGLE_CLIENT_SECRET_HERE
+      - key: NODE_ENV
+        value: production
+
 
 
 
