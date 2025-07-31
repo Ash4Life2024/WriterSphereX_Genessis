@@ -9,13 +9,35 @@ export default function JournalPage() {
   const [prompt, setPrompt] = useState("");
 
   useEffect(() => {
-    // Simulate genre-based prompt logic
+    // Genre-based prompts
     const genrePrompts = {
       Fantasy: "Describe a memory that feels magical but might not be real.",
       Drama: "Write about a moment of emotional transformation.",
       "Sci-Fi": "What part of your mind would you upgrade — and why?",
     };
-    setPrompt(genrePrompts[genre]);
+    const newPrompt = genrePrompts[genre];
+    setPrompt(newPrompt);
+
+    // Voice narration using SpeechSynthesis API
+    const speakPrompt = () => {
+      const utterance = new SpeechSynthesisUtterance(newPrompt);
+      utterance.rate = 0.95;
+      utterance.pitch = 1.2;
+      utterance.volume = 0.9;
+
+      const voices = speechSynthesis.getVoices();
+      const caelVoice = voices.find(v =>
+        v.name.toLowerCase().includes("male") || v.name.toLowerCase().includes("en-us")
+      );
+      if (caelVoice) utterance.voice = caelVoice;
+
+      speechSynthesis.cancel(); // Stop any previous speech
+      speechSynthesis.speak(utterance);
+    };
+
+    if (window.speechSynthesis) {
+      speakPrompt();
+    }
   }, [genre]);
 
   const handleSaveEntry = async () => {
@@ -66,7 +88,7 @@ export default function JournalPage() {
       </div>
 
       <div className="text-xs text-gray-400 opacity-50">
-        Your words ripple through the orbit of your inner universe.
+        Cael whispers through the stars: your thoughts matter 🌌
       </div>
     </main>
   );
