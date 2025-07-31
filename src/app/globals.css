@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* === WriterSphereX Cosmic Enhancements === */
+body {
+  @apply bg-space-gradient text-starlight font-cosmic min-h-screen;
+}
+
+/* Smooth fade-in for atmospheric entry */
+.fade-in {
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Button Glow for genre badges */
+.btn-glow {
+  @apply px-4 py-2 rounded-full bg-nebula text-white hover:bg-indigo-700 transition duration-300 shadow-md;
+}
+
+/* Galaxy container spacing */
+.container-galaxy {
+  @apply max-w-4xl mx-auto px-6 py-12;
+}
+
+/* Section titles with flair */
+.heading-cosmic {
+  @apply text-4xl font-bold tracking-wide text-galaxy-indigo mb-6;
+}
