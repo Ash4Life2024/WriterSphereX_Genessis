@@ -1,3 +1,16 @@
+import LoginButton from '../components/LoginButton';
+import { getAuth } from 'firebase/auth';
+
+const user = getAuth().currentUser;
+
+if (!user) {
+  return (
+    <main className="flex flex-col items-center justify-center h-screen bg-gray-950 text-white">
+      <h1 className="text-xl mb-4">Sign in to unlock your cosmic journal 🌌</h1>
+      <LoginButton />
+    </main>
+  );
+}
 "use client";
 import { useState, useEffect } from "react";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
