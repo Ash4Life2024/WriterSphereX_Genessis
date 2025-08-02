@@ -8,6 +8,7 @@ export default function JournalPage() {
   const auth = getAuth();
   const user = auth.currentUser;
 
+  // 🔐 Gated UI: Show login if not signed in
   if (!user) {
     return (
       <main className="flex flex-col items-center justify-center h-screen bg-gray-950 text-white">
@@ -22,6 +23,7 @@ export default function JournalPage() {
   const [prompt, setPrompt] = useState("");
   const [caelResponse, setCaelResponse] = useState("");
 
+  // 🧠 Generate prompt + narrate when genre changes
   useEffect(() => {
     const genrePrompts = {
       Fantasy: "Describe a memory that feels magical but might not be real.",
@@ -51,6 +53,7 @@ export default function JournalPage() {
     }
   }, [genre]);
 
+  // 🧬 Emotion detection and Cael poetic reply
   const detectEmotions = (text) => {
     const emotionKeywords = {
       hope: "lightOrbits",
@@ -59,7 +62,7 @@ export default function JournalPage() {
       love: "twinStar",
       fear: "blackHole",
     };
-    return Object.keys(emotionKeywords).filter(keyword =>
+    return Object.keys(emotionKeywords).filter((keyword) =>
       text.toLowerCase().includes(keyword)
     );
   };
@@ -73,6 +76,7 @@ export default function JournalPage() {
     return "Your words drift gently through the galaxy.";
   };
 
+  // 💾 Save journal entry with emotion tags and Cael reply
   const handleSaveEntry = async () => {
     const db = getFirestore();
     if (entry.trim() !== "") {
@@ -153,3 +157,4 @@ export default function JournalPage() {
     </main>
   );
 }
+
