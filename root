@@ -1,0 +1,101 @@
+diff --git a/components/WriterSphereXAddOn.jsx b/components/WriterSphereXAddOn.jsx
+new file mode 100644
+index 0000000..e3a6fa1
+--- /dev/null
++++ b/components/WriterSphereXAddOn.jsx
+@@ -0,0 +1,175 @@
++/* Full React component code from above here */
++/* (See code snippet in previous message or inside ZIP) */
++
++import React, { useState, useEffect } from 'react';
++
++const API_BASE = process.env.NEXT_PUBLIC_WRITERSHPEX_AI || 'http://localhost:3001';
++
++export default function WriterSphereXAddOn({ project, authToken, onOpenAnimeGenerator }) {
++  /* component code here exactly as given above */
++}
++
+diff --git a/pages/writerspherex-demo.jsx b/pages/writerspherex-demo.jsx
+new file mode 100644
+index 0000000..fa3c4e5
+--- /dev/null
++++ b/pages/writerspherex-demo.jsx
+@@ -0,0 +1,26 @@
++import React from 'react';
++import WriterSphereXAddOn from '../components/WriterSphereXAddOn';
++
++export default function Demo() {
++  return (
++    <div style={{ height: '100vh' }}>
++      <WriterSphereXAddOn
++        project={{ id: 'proj-123', title: 'My Story' }}
++        onOpenAnimeGenerator={(payload) => {
++          console.log('Opening Anime Generator with payload:', payload);
++          alert('Anime Generator opened! Check console for payload.');
++        }}
++        authToken={process.env.NEXT_PUBLIC_WRITERSHPEX_AI_TOKEN}
++      />
++    </div>
++  );
++}
++
+diff --git a/mock-ai-server/server.js b/mock-ai-server/server.js
+new file mode 100644
+index 0000000..9afaf57
+--- /dev/null
++++ b/mock-ai-server/server.js
+@@ -0,0 +1,59 @@
++const express = require('express');
++const cors = require('cors');
++const bodyParser = require('body-parser');
++
++const app = express();
++app.use(cors());
++app.use(bodyParser.json({ limit: '2mb' }));
++
++function simulateDelayAndError(req, res, next) {
++  const delay = 400 + Math.random() * 1100;
++  setTimeout(() => {
++    if (Math.random() < 0.05) {
++      res.status(500).json({ ok: false, error: 'Random server error for testing' });
++    } else {
++      next();
++    }
++  }, delay);
++}
++
++app.use(simulateDelayAndError);
++
++app.get('/health', (req, res) => res.json({ ok: true, ts: Date.now() }));
++
++app.post('/ai/complete-chapter', (req, res) => {
++  const { projectId, chapterText, tone } = req.body || {};
++  const continuation = `\n\n${chapterText ? chapterText.slice(-140) : ''}\n\n[AI CONTINUATION - tone=${tone || 'neutral'}] She reached the window and the rain began to fall harder...`;
++  res.json({ ok: true, continuation });
++});
++
++app.post('/ai/analyze', (req, res) => {
++  const { text } = req.body || {};
++  const paragraphCount = (text || '').split(/\n\n+/).filter(Boolean).length;
++  const warnings = [];
++  if ((text || '').length < 120) warnings.push('Short text — not enough context for deep analysis');
++  if (paragraphCount > 12) warnings.push('Long scene — consider breaking into sub-scenes');
++
++  const report = {
++    pacing: paragraphCount > 8 ? 'Could be tighter in the middle' : 'Good',
++    dialogue: 'Some lines may be exposition-heavy',
++    continuity: [],
++    paragraphCount,
++    warnings,
++  };
++  res.json({ ok: true, report });
++});
++
++app.post('/ai/rewrite', (req, res) => {
++  const { paragraph, style } = req.body || {};
++  const rewritten = `${paragraph || ''} \n\n[REWRITTEN: style=${style}]`;
++  res.json({ ok: true, rewritten });
++});
++
++const PORT = process.env.PORT || 3001;
++app.listen(PORT, () => console.log(`Mock AI server listening on ${PORT}`));
